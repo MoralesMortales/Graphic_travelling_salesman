@@ -4,11 +4,10 @@
 #include <cstdlib>
 #include <ctime>
 #include <vector>
-#include <limits>
 #include <sstream>
 
-#define winAltura 400
-#define winAmplit 600
+#define winAltura 600
+#define winAmplit 800
 
 class problema {
 private:
@@ -48,22 +47,37 @@ public:
 using namespace miniwin;
 
 int floaTopixel_x(float x1) {
-    return (x1 * winAmplit) / 10;
+    return ((x1 + 1) * winAmplit) / 12;
 }
 
 int floaTopixel_y(float y1) {
-    return (winAltura * (10 - y1) / 10);
+    return (winAltura * (10 - y1) / 12);
 }
 
 int main() {
     srand(time(nullptr));
 
-    float coord[2][101] = { {0, 1, 4, 2, 5, 6, 3, 8, 7, 6, 3, 4, 5, 2, 2, 5, 2, 4, 1, 5},
-                            {0, 9, 8, 6, 7, 9, 4, 2, 5, 4, 3, 6, 1, 8, 5, 5, 2, 4, 1, 1} };
+    float coord[2][101];
+    int n = 11;
+    int config[101];
+    for (int i = 0; i < n; i++){
+    config[i] = i;
+    };
 
-    int config[101] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19};
+    for (int i = 0; i < 2; i++) {
+        for (int f = 0; f < n; f++) {
+            if (1 == 0) {
+                coord[i][f] = f + 1;
+            }
 
-    problema pp(20, coord);  // Ajustado a 20 para incluir todos los puntos
+            else {
+                coord[i][f] = rand() % 10;
+      }
+    }
+  }
+
+
+    problema pp(n, coord);
     tour tt(pp, config);
 
     float mejorCosto = std::numeric_limits<float>::max();
@@ -72,24 +86,29 @@ int main() {
     const int maxSinMejoras = 1000;
     int iteraciones = 0;
 
-    color(AZUL);
+
     vredimensiona(winAmplit, winAltura);
 
     while (sinMejoras < maxSinMejoras) {
         borra();
-        for (int i = 1; i <= pp.getn(); i++) {
-            circulo_lleno(floaTopixel_x(pp.getx(i)), floaTopixel_y(pp.gety(i)), 10);
+        for (int i = 1; i <= pp.getn() - 1; i++) {
+            int x = floaTopixel_x(pp.getx(i));
+            int y = floaTopixel_y(pp.gety(i));
+            color(VERDE);
+            circulo_lleno(x, y, 10);
+            std::ostringstream oss;
+            oss << i;
+            texto(x + 14, y - 14, oss.str());
         }
         for (int i = 1; i < pp.getn(); i++) {
             linea(floaTopixel_x(pp.getx(tt.getciudad(i))), floaTopixel_y(pp.gety(tt.getciudad(i))),
                   floaTopixel_x(pp.getx(tt.getciudad(i + 1))), floaTopixel_y(pp.gety(tt.getciudad(i + 1))));
         }
-        linea(floaTopixel_x(pp.getx(tt.getciudad(pp.getn()))), floaTopixel_y(pp.gety(tt.getciudad(pp.getn()))),
-              floaTopixel_x(pp.getx(tt.getciudad(1))), floaTopixel_y(pp.gety(tt.getciudad(1))));
+        linea(floaTopixel_x(pp.getx(tt.getciudad(n))), floaTopixel_y(pp.gety(tt.getciudad(n))),
+      floaTopixel_x(pp.getx(tt.getciudad(1))), floaTopixel_y(pp.gety(tt.getciudad(1))));
 
-        // Mostrar el contador de iteraciones
         std::ostringstream oss;
-        oss << "Iteraciones: " << iteraciones;
+        oss << "Pruebas: " << iteraciones;
         texto(winAmplit - 150, 20, oss.str());
 
         refresca();
@@ -193,15 +212,12 @@ int tour::getactual() {
 
 bool tour::valida() {
     std::vector<int> conexiones(p.getn(), 0);
-    for (int i = 1; i < p.getn(); i++) {
+    for (int i = 1; i <= p.getn(); i++) {
         conexiones[configuracion[actual][i]]++;
-        conexiones[configuracion[actual][i + 1]]++;
     }
-    conexiones[configuracion[actual][p.getn()]]++;
-    conexiones[configuracion[actual][1]]++;
 
     for (int i = 0; i < p.getn(); i++) {
-        if (conexiones[i] > 2) {
+        if (conexiones[i] != 1) {
             return false;
         }
     }

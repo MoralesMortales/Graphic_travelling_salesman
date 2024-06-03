@@ -1,12 +1,4 @@
 
-/*
- *  MiniWin: Un mini-conjunto de funciones para abrir una ventana, pintar en
- *    ella y detectar la presión de algunas teclas. Básicamente para hacer
- *    juegos sencillos.
- *
- *  (c) Pau Fernández, licencia MIT: http://es.wikipedia.org/wiki/MIT_License
- */
-
 // VERSION: 0.2.2
 
 
@@ -34,8 +26,8 @@ char szClassName[ ] = "MiniWin";
 
 HWND            hWnd;              // ventana principal
 HBITMAP         hBitmap;           // bitmap para pintar off-screen
-int             iWidth  = 400;     // ancho de la ventana
-int             iHeight = 300;     // alto de la ventana
+int             iWidth  = 800;     // ancho de la ventana
+int             iHeight = 400;     // alto de la ventana
 HDC             hDCMem = NULL;     // Device Context en memoria
 std::queue<int> _teclas;           // cola de teclas
 bool            _raton_dentro;     // el raton est� dentro del 'client area'
